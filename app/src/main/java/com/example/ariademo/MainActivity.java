@@ -4,6 +4,7 @@ import android.Manifest;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.arialyy.annotations.Download;
@@ -15,11 +16,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "TAG";
+    private TextView tv1,tv2,tv3,tv4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        tv1=findViewById(R.id.task1);
+        tv2=findViewById(R.id.task2);
+        tv3=findViewById(R.id.task3);
+        tv4=findViewById(R.id.task4);
         Aria.download(this).register();
     }
 
@@ -55,22 +61,118 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "multiple", Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * @ describe 预处理的注解，在任务为开始前回调（一般在此处预处理UI界面）
+     * @author lzl
+     * @ time 2020/11/5 20:26
+     * @ param
+     * @ return
+     */
+
+    @Download.onPre
+    protected void downloadPre(DownloadTask task) {
+        Log.e(TAG, "Pre===========");
+    }
+
+    /**
+     * @ describe 任务开始时的注解，新任务开始时进行回调
+     * @author lzl
+     * @ time 2020/11/5 20:27
+     * @ param
+     * @ return
+     */
+    @Download.onTaskStart
+    protected void downloadStart(DownloadTask task) {
+        Log.e(TAG, "Start===========");
+    }
+
+    /**
+     * @ describe 任务恢复时的注解，任务从停止恢复到运行前进行回调
+     * @author lzl
+     * @ time 2020/11/5 20:28
+     * @ param
+     * @ return
+     */
+    @Download.onTaskResume
+    protected void downloadResume(DownloadTask task) {
+        Log.e(TAG, "Resume===========");
+    }
+
+
     //在这里处理任务执行中的状态，如进度进度条的刷新
     @Download.onTaskRunning
     protected void running(DownloadTask task) {
         if (task.getKey().equals(Url.URL1)) {
             Log.e(TAG, "Percent===========" + task.getPercent());
+            tv1.setText(String.format("%s%%",task.getPercent()));
         }
         int p = task.getPercent();    //任务进度百分比
         String speed = task.getConvertSpeed();    //转换单位后的下载速度，单位转换需要在配置文件中打开
         long speed1 = task.getSpeed(); //原始byte长度速度
     }
 
+    /**
+     * @ describe 队列已经满了，继续创建新任务，将会回调该方法
+     * @author lzl
+     * @ time 2020/11/5 20:31
+     * @ param
+     * @ return
+     */
+    @Download.onWait
+    protected void downloadWait(DownloadTask task) {
+        Log.e(TAG, "Wait===========");
+    }
+
+    /**
+     * @ describe 任务停止时的注解，任务停止时进行回调
+     * @author lzl
+     * @ time 2020/11/5 20:34
+     * @ param
+     * @ return
+     */
+    @Download.onTaskStop
+    protected void downloadStop(DownloadTask task) {
+        Log.e(TAG, "Stop===========");
+    }
+
+    /**
+     * @ describe 任务被删除时的注解，任务被删除时进行回调
+     * @author lzl
+     * @ time 2020/11/5 20:36
+     * @ param
+     * @ return
+     */
+    @Download.onTaskCancel
+    protected void downloadCancel(DownloadTask task) {
+        Log.e(TAG, "Cancel===========");
+    }
+
+    /**
+     * @ describe 任务失败时的注解，任务执行失败时进行回调
+     * @author lzl
+     * @ time 2020/11/5 20:36
+     * @ param
+     * @ return
+     */
+    @Download.onTaskFail
+    protected void downloadonTaskFail(DownloadTask task) {
+        Log.e(TAG, "Fail===========");
+    }
+
+    /**
+     * @ describe 任务完成时的注解，任务完成时进行回调
+     * @author lzl
+     * @ time 2020/11/5 20:37
+     * @ param
+     * @ return
+     */
     @Download.onTaskComplete
-    void taskComplete(DownloadTask task) {
+    protected void taskComplete(DownloadTask task) {
         //在这里处理任务完成的状态
         if (task.getKey().equals(Url.URL1)) {
             Log.e(TAG, "Over===========" + task.getPercent());
         }
     }
+
+
 }
