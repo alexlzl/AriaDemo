@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         tv4 = findViewById(R.id.task4);
         stopSingleDownloadBtn = findViewById(R.id.stopSingleDownloadBtn);
         Aria.download(this).register();
+        Aria.get(this).getDownloadConfig().setMaxTaskNum(3);
     }
 
     private long apkTaskId;
