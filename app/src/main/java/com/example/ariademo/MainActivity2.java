@@ -1,0 +1,90 @@
+package com.example.ariademo;
+
+import android.Manifest;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.arialyy.annotations.DownloadGroup;
+import com.arialyy.aria.core.Aria;
+import com.arialyy.aria.core.task.DownloadGroupTask;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity2 extends AppCompatActivity {
+    private Button multiButtonStart,multiButtonStop;
+     private TextView task1;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main2);
+        task1=findViewById(R.id.task1);
+        Aria.download(this).register();
+        Aria.get(this).getDownloadConfig().setMaxTaskNum(3);
+    }
+
+    public void multiDownloadStart(View view){
+        Toast.makeText(this, "多任务下载", Toast.LENGTH_LONG).show();
+        PermissionsUtils.getInstance().checkPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, new PermissionsUtils.IPermissionsResult() {
+            @Override
+            public void passPermissions() {
+                List<String> subUrls = new ArrayList<>(); // 创建一个http url集合
+                subUrls.add(Url.URL1);  // 添加一个视频地址
+                subUrls.add(Url.URL2);     // 添加一个字幕地址
+                subUrls.add(Url.URL3);            // 添加一个视频截图
+                String folderName = SDUtils.getSDCardCacheDir(MainActivity2.this) + "/demos/file/multi";
+                FileUtils.createDir(folderName);
+                long taskId = Aria.download(this)
+                        .loadGroup(subUrls) // 设置url集合
+                        .setDirPath(folderName)    // 设置该组合任务的文件夹路径
+                        .unknownSize()            // 如果你不知道组合任务的长度请设置这个，需要注意的是，恢复任务时也有加上这个
+                        .create();
+            }
+
+            @Override
+            public void forbidPermissions() {
+
+            }
+        });
+
+
+
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        PermissionsUtils.getInstance().onRequestPermissionsResult(this, requestCode, permissions, grantResults);
+    }
+
+    /*
+     * 任务执行中
+     */
+    @DownloadGroup.onTaskRunning()
+    protected void running(DownloadGroupTask task) {
+       task1.setText("group running, p = "
+               + task.getPercent()
+               + ", speed = "
+               + task.getConvertSpeed()
+               + "current_p = "
+               + task.getCurrentProgress());
+
+    }
+
+    /*
+     * 任务完成
+     */
+    @DownloadGroup.onTaskComplete()
+    protected void taskComplete(DownloadGroupTask task) {
+        task1.setText("下载完成");
+    }
+
+}

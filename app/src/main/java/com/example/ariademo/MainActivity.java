@@ -1,6 +1,7 @@
 package com.example.ariademo;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -113,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void multiDownload(View view) {
         Toast.makeText(this, "multiple", Toast.LENGTH_LONG).show();
+        startActivity(new Intent(this,MainActivity2.class));
     }
 
     /**
