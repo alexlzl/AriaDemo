@@ -148,7 +148,19 @@ public class MainActivity extends AppCompatActivity {
     @Download.onTaskRunning
     protected void running(DownloadTask task) {
         Log.e(TAG, "Percent===========" + task.getPercent()+"======"+task.getKey());
-        tv1.setText(String.format("%s%%",task.getPercent()));
+        if(Url.URL1.equals(task.getKey())){
+            //任务1
+            tv1.setText(String.format("%s%%",task.getPercent()));
+        }
+        if(Url.URL2.equals(task.getKey())){
+            //任务2
+            tv2.setText(String.format("%s%%",task.getPercent()));
+        }
+        if(Url.URL3.equals(task.getKey())){
+            //任务3
+            tv3.setText(String.format("%s%%",task.getPercent()));
+        }
+
         int p = task.getPercent();    //任务进度百分比
         String speed = task.getConvertSpeed();    //转换单位后的下载速度，单位转换需要在配置文件中打开
         long speed1 = task.getSpeed(); //原始byte长度速度
@@ -213,7 +225,19 @@ public class MainActivity extends AppCompatActivity {
     protected void taskComplete(DownloadTask task) {
         //在这里处理任务完成的状态
         Log.e(TAG, "Over===========" + task.getPercent()+"======"+task.getKey());
-        tv1.setText(String.format("%s%%",task.getPercent()));
+        if(Url.URL1.equals(task.getKey())){
+            //任务1
+            tv1.setText(String.format("%s%%",task.getPercent()));
+        }
+        if(Url.URL2.equals(task.getKey())){
+            //任务2
+            tv2.setText(String.format("%s%%",task.getPercent()));
+        }
+        if(Url.URL3.equals(task.getKey())){
+            //任务3
+            tv3.setText(String.format("%s%%",task.getPercent()));
+        }
+
     }
 
 

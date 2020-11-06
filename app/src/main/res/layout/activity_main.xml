@@ -38,21 +38,21 @@
         android:id="@+id/task2"
         android:textSize="20sp"
         android:textColor="@color/colorAccent"
-        android:text="task1"
+        android:text="task2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
     <TextView
         android:id="@+id/task3"
         android:textSize="20sp"
         android:textColor="@color/colorAccent"
-        android:text="task1"
+        android:text="task3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
     <TextView
         android:id="@+id/task4"
         android:textSize="20sp"
         android:textColor="@color/colorAccent"
-        android:text="task1"
+        android:text="task4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 </LinearLayout>
