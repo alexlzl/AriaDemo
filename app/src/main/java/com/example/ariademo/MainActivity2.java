@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.arialyy.annotations.DownloadGroup;
 import com.arialyy.aria.core.Aria;
+import com.arialyy.aria.core.download.DownloadEntity;
 import com.arialyy.aria.core.task.DownloadGroupTask;
 
 import java.util.ArrayList;
@@ -19,13 +20,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity2 extends AppCompatActivity {
     private Button multiButtonStart,multiButtonStop;
-     private TextView task1;
+     private TextView task1,task2,task3,task4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         task1=findViewById(R.id.task1);
+        task2=findViewById(R.id.task2);
+        task3=findViewById(R.id.task3);
+        task4=findViewById(R.id.task4);
         Aria.download(this).register();
         Aria.get(this).getDownloadConfig().setMaxTaskNum(3);
     }
@@ -43,8 +47,8 @@ public class MainActivity2 extends AppCompatActivity {
                 FileUtils.createDir(folderName);
                 long taskId = Aria.download(this)
                         .loadGroup(subUrls) // 设置url集合
-                        .setDirPath(folderName)    // 设置该组合任务的文件夹路径
-                        .unknownSize()            // 如果你不知道组合任务的长度请设置这个，需要注意的是，恢复任务时也有加上这个
+                        .setDirPath(folderName)   // 设置该组合任务的文件夹路径
+                        .unknownSize().ignoreFilePathOccupy()            // 如果你不知道组合任务的长度请设置这个，需要注意的是，恢复任务时也有加上这个
                         .create();
             }
 
@@ -85,6 +89,33 @@ public class MainActivity2 extends AppCompatActivity {
     @DownloadGroup.onTaskComplete()
     protected void taskComplete(DownloadGroupTask task) {
         task1.setText("下载完成");
+    }
+    @DownloadGroup.onSubTaskRunning
+    void onSubTaskRunning(DownloadGroupTask groupTask, DownloadEntity subEntity) {
+        // 子任务执行中的回调
+        if(Url.URL1.equals(subEntity.getKey())){
+            task2.setText(String.format("%s%%",subEntity.getPercent()));
+        }
+        if(Url.URL2.equals(subEntity.getKey())){
+            task3.setText(String.format("%s%%",subEntity.getPercent()));
+        }
+        if(Url.URL3.equals(subEntity.getKey())){
+            task4.setText(String.format("%s%%",subEntity.getPercent()));
+        }
+    }
+
+    @DownloadGroup.onSubTaskComplete
+    void onSubTaskComplete(DownloadGroupTask groupTask, DownloadEntity subEntity) {
+        // 子任务完成的回调
+        if(Url.URL1.equals(subEntity.getKey())){
+            task2.setText("下载完成");
+        }
+        if(Url.URL2.equals(subEntity.getKey())){
+            task3.setText("下载完成");
+        }
+        if(Url.URL3.equals(subEntity.getKey())){
+            task4.setText("下载完成");
+        }
     }
 
 }
