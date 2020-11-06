@@ -9,9 +9,19 @@
 
    <Button
        android:onClick="singleDownload"
-       android:text="单任务程下载"
+       android:text="单任务程下载APK"
        android:layout_width="200dp"
        android:layout_height="100dp"/>
+    <Button
+        android:onClick="singleDownloadVideo"
+        android:text="单任务程下载视频"
+        android:layout_width="200dp"
+        android:layout_height="100dp"/>
+    <Button
+        android:onClick="singleDownloadPic"
+        android:text="单任务程下载图片"
+        android:layout_width="200dp"
+        android:layout_height="100dp"/>
     <Button
         android:onClick="multiDownload"
         android:text="多任务程下载"

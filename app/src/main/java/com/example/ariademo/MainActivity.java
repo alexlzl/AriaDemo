@@ -30,15 +30,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void singleDownload(View view) {
-        Toast.makeText(this, "single", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "下载apk", Toast.LENGTH_LONG).show();
         PermissionsUtils.getInstance().checkPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, new PermissionsUtils.IPermissionsResult() {
             @Override
             public void passPermissions() {
-                String path = SDUtils.getSDCardCacheDir(MainActivity.this) + "/demos/file/demo.apk";
-                FileUtils.CreateFile(path);
+//                String path = SDUtils.getSDCardCacheDir(MainActivity.this) + "/demos/file/demo.apk";
+////                FileUtils.CreateFile(path);
+                String fileName = SDUtils.getSDCardCacheDir(MainActivity.this) + "/demos/file/apk/test.apk";
+                String folderName= SDUtils.getSDCardCacheDir(MainActivity.this) + "/demos/file/apk";
+                FileUtils.createDir(folderName);
                 long taskId = Aria.download(this)
                         .load(Url.URL1)     //读取下载地址
-                        .setFilePath(path) //设置文件保存的完整路径
+                        .setFilePath(fileName) //设置文件保存的完整路径
                         .create();   //创建并启动下载
             }
 
@@ -49,6 +52,48 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    public void singleDownloadVideo(View view){
+        Toast.makeText(this, "下载视频", Toast.LENGTH_LONG).show();
+        PermissionsUtils.getInstance().checkPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, new PermissionsUtils.IPermissionsResult() {
+            @Override
+            public void passPermissions() {
+                String fileName = SDUtils.getSDCardCacheDir(MainActivity.this) + "/demos/file/video/test.mp4";
+                String folderName= SDUtils.getSDCardCacheDir(MainActivity.this) + "/demos/file/video";
+                FileUtils.createDir(folderName);
+                long taskId = Aria.download(this)
+                        .load(Url.URL2)     //读取下载地址
+                        .setFilePath(fileName) //设置文件保存的完整路径
+                        .create();   //创建并启动下载
+            }
+
+            @Override
+            public void forbidPermissions() {
+
+            }
+        });
+    }
+
+    public void singleDownloadPic(View view){
+        Toast.makeText(this, "下载图片", Toast.LENGTH_LONG).show();
+        PermissionsUtils.getInstance().checkPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, new PermissionsUtils.IPermissionsResult() {
+            @Override
+            public void passPermissions() {
+                String fileName = SDUtils.getSDCardCacheDir(MainActivity.this) + "/demos/file/pic/test.jpg";
+                String folderName= SDUtils.getSDCardCacheDir(MainActivity.this) + "/demos/file/pic";
+                FileUtils.createDir(folderName);
+                long taskId = Aria.download(this)
+                        .load(Url.URL3)     //读取下载地址
+                        .setFilePath(fileName) //设置文件保存的完整路径
+                        .create();   //创建并启动下载
+            }
+
+            @Override
+            public void forbidPermissions() {
+
+            }
+        });
     }
 
     @Override
@@ -171,6 +216,7 @@ public class MainActivity extends AppCompatActivity {
         //在这里处理任务完成的状态
         if (task.getKey().equals(Url.URL1)) {
             Log.e(TAG, "Over===========" + task.getPercent());
+            tv1.setText(String.format("%s%%",task.getPercent()));
         }
     }
 
