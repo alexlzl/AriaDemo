@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         tv4=findViewById(R.id.task4);
         Aria.download(this).register();
     }
-
+ private long apkTaskId;
     public void singleDownload(View view) {
         Toast.makeText(this, "下载apk", Toast.LENGTH_LONG).show();
         PermissionsUtils.getInstance().checkPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, new PermissionsUtils.IPermissionsResult() {
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
                 String fileName = SDUtils.getSDCardCacheDir(MainActivity.this) + "/demos/file/apk/test.apk";
                 String folderName= SDUtils.getSDCardCacheDir(MainActivity.this) + "/demos/file/apk";
                 FileUtils.createDir(folderName);
-                long taskId = Aria.download(this)
+                apkTaskId = Aria.download(this)
                         .load(Url.URL1)     //读取下载地址
                         .setFilePath(fileName) //设置文件保存的完整路径
                         .create();   //创建并启动下载
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
+  private long videoTaskId;
     public void singleDownloadVideo(View view){
         Toast.makeText(this, "下载视频", Toast.LENGTH_LONG).show();
         PermissionsUtils.getInstance().checkPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, new PermissionsUtils.IPermissionsResult() {
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                 String fileName = SDUtils.getSDCardCacheDir(MainActivity.this) + "/demos/file/video/test.mp4";
                 String folderName= SDUtils.getSDCardCacheDir(MainActivity.this) + "/demos/file/video";
                 FileUtils.createDir(folderName);
-                long taskId = Aria.download(this)
+                videoTaskId = Aria.download(this)
                         .load(Url.URL2)     //读取下载地址
                         .setFilePath(fileName) //设置文件保存的完整路径
                         .create();   //创建并启动下载
@@ -74,16 +74,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
+   private long picTaskId;
     public void singleDownloadPic(View view){
         Toast.makeText(this, "下载图片", Toast.LENGTH_LONG).show();
         PermissionsUtils.getInstance().checkPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, new PermissionsUtils.IPermissionsResult() {
             @Override
             public void passPermissions() {
-                String fileName = SDUtils.getSDCardCacheDir(MainActivity.this) + "/demos/file/pic/test.jpg";
+                String fileName = SDUtils.getSDCardCacheDir(MainActivity.this) + "/demos/file/pic/gome.jpg";
                 String folderName= SDUtils.getSDCardCacheDir(MainActivity.this) + "/demos/file/pic";
                 FileUtils.createDir(folderName);
-                long taskId = Aria.download(this)
+                picTaskId = Aria.download(this)
                         .load(Url.URL3)     //读取下载地址
                         .setFilePath(fileName) //设置文件保存的完整路径
                         .create();   //创建并启动下载
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Download.onPre
     protected void downloadPre(DownloadTask task) {
-        Log.e(TAG, "Pre===========");
+        Log.e(TAG, "Pre==========="+task.getKey());
     }
 
     /**
@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
      */
     @Download.onTaskStart
     protected void downloadStart(DownloadTask task) {
-        Log.e(TAG, "Start===========");
+        Log.e(TAG, "Start==========="+task.getKey());
     }
 
     /**
@@ -140,17 +140,15 @@ public class MainActivity extends AppCompatActivity {
      */
     @Download.onTaskResume
     protected void downloadResume(DownloadTask task) {
-        Log.e(TAG, "Resume===========");
+        Log.e(TAG, "Resume==========="+task.getKey());
     }
 
 
     //在这里处理任务执行中的状态，如进度进度条的刷新
     @Download.onTaskRunning
     protected void running(DownloadTask task) {
-        if (task.getKey().equals(Url.URL1)) {
-            Log.e(TAG, "Percent===========" + task.getPercent());
-            tv1.setText(String.format("%s%%",task.getPercent()));
-        }
+        Log.e(TAG, "Percent===========" + task.getPercent()+"======"+task.getKey());
+        tv1.setText(String.format("%s%%",task.getPercent()));
         int p = task.getPercent();    //任务进度百分比
         String speed = task.getConvertSpeed();    //转换单位后的下载速度，单位转换需要在配置文件中打开
         long speed1 = task.getSpeed(); //原始byte长度速度
@@ -165,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
      */
     @Download.onWait
     protected void downloadWait(DownloadTask task) {
-        Log.e(TAG, "Wait===========");
+        Log.e(TAG, "Wait==========="+task.getKey());
     }
 
     /**
@@ -177,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
      */
     @Download.onTaskStop
     protected void downloadStop(DownloadTask task) {
-        Log.e(TAG, "Stop===========");
+        Log.e(TAG, "Stop==========="+task.getKey());
     }
 
     /**
@@ -189,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
      */
     @Download.onTaskCancel
     protected void downloadCancel(DownloadTask task) {
-        Log.e(TAG, "Cancel===========");
+        Log.e(TAG, "Cancel==========="+task.getKey());
     }
 
     /**
@@ -200,8 +198,8 @@ public class MainActivity extends AppCompatActivity {
      * @ return
      */
     @Download.onTaskFail
-    protected void downloadonTaskFail(DownloadTask task) {
-        Log.e(TAG, "Fail===========");
+    protected void downloadTaskFail(DownloadTask task) {
+        Log.e(TAG, "Fail==========="+task.getKey());
     }
 
     /**
@@ -214,10 +212,8 @@ public class MainActivity extends AppCompatActivity {
     @Download.onTaskComplete
     protected void taskComplete(DownloadTask task) {
         //在这里处理任务完成的状态
-        if (task.getKey().equals(Url.URL1)) {
-            Log.e(TAG, "Over===========" + task.getPercent());
-            tv1.setText(String.format("%s%%",task.getPercent()));
-        }
+        Log.e(TAG, "Over===========" + task.getPercent()+"======"+task.getKey());
+        tv1.setText(String.format("%s%%",task.getPercent()));
     }
 
 
