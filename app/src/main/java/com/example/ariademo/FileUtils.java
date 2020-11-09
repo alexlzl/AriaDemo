@@ -1,10 +1,6 @@
 package com.example.ariademo;
 
-/**
- * @author lzl
- * @ describe
- * @ time 2020/11/5 17:46
- */
+
 
 import android.util.Log;
 
@@ -12,8 +8,9 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * 创建文件 和 文件夹
- * Created by yu on 2016/8/21.
+ * @author lzl
+ * @ describe
+ * @ time 2020/11/5 17:46
  */
 public class FileUtils {
 
